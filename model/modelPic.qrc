@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/model">
+        <file>noodiTyyppiPic/date.png</file>
+        <file>noodiTyyppiPic/memo.png</file>
+        <file>noodiTyyppiPic/muisti.png</file>
+        <file>noodiTyyppiPic/naama.png</file>
+        <file>noodiTyyppiPic/puhelin.png</file>
+        <file>noodiTyyppiPic/sijainti.png</file>
+        <file>noodiTyyppiPic/tieto.png</file>
+    </qresource>
+</RCC>
