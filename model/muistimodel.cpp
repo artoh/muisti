@@ -19,27 +19,60 @@ GNU General Public License for more details.
 
 #include "muistimodel.h"
 
+#include <QDir>
+#include <QFileInfo>
+
 MuistiModel::MuistiModel(QObject *parent) :
     QAbstractItemModel(parent)
 {
 }
 
-QIcon MuistiModel::koriste(int tyyppi, const QString & /* avain */)
+QIcon MuistiModel::koriste(int tyyppi, const QString &avain )
 {
+    return QIcon( koristePolku(tyyppi, avain));
+}
+
+QString MuistiModel::koristePolku(int tyyppi, const QString &avain)
+{
+    // Ensisijaisesti palautetaan avaimeen liittyvä koriste
+    QString polku = avainKoristeet_.value(avain, QString());
+    if( !polku.isEmpty() )
+        return polku;
+
+
+    // Toissijaisesti tyyppiin liittyvä (kiinteä resurssi)
+
     switch (tyyppi) {
     case HenkiloNoodi:
-        return QIcon(":/model/noodiTyyppiPic/naama.png");
+        return ":/model/noodiTyyppiPic/naama.png";
     case TietoNoodi:
-        return QIcon(":/model/noodiTyyppiPic/tieto.png");
+        return ":/model/noodiTyyppiPic/tieto.png";
     case PvmNoodi:
-        return QIcon(":/model/noodiTyyppiPic/date.png");
+        return ":/model/noodiTyyppiPic/date.png";
     case MemoNoodi:
-        return QIcon(":/model/noodiTyyppiPic/memo.png");
+        return ":/model/noodiTyyppiPic/memo.png";
     case PuhelinNoodi:
-        return QIcon(":/model/noodiTyyppiPic/puhelin.png");
+        return ":/model/noodiTyyppiPic/puhelin.png";
     case SijaintiNoodi:
-        return QIcon(":/model/noodiTyyppiPic/sijainti.png");
+        return ":/model/noodiTyyppiPic/sijainti.png";
+
+    // Ja lopulta ohjelman kuvake
     default:
-        return QIcon(":/model/noodiTyyppiPic/muisti.png");
+        return ":/model/noodiTyyppiPic/muisti.png";
     }
+
+}
+
+void MuistiModel::haeKoristeet(const QString &hakemistopolku)
+{
+    QDir hakemisto(hakemistopolku);
+    QFileInfo tiedostot = hakemisto.entryInfoList( QStringList() << "*.png" << "*.jpg" );
+    foreach (QFileInfo tiedosto, tiedostot)
+    {
+        QString avain = tiedosto.baseName();
+        QString polku = tiedosto.absoluteFilePath();
+
+        avainKoristeet_.insert(avain, polku);
+    }
+
 }

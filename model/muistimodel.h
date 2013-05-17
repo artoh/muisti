@@ -22,6 +22,7 @@ GNU General Public License for more details.
 
 #include <QAbstractItemModel>
 #include <QIcon>
+#include <QMap>
 
 
 /**
@@ -56,18 +57,44 @@ public:
     /**
      * @brief Ikoni (decoration), joka liittyy kyseiseen tyyppiin (Qt::DecorationRole)
      *
-     * Jos halutulle tyyppi/avainparille ei ole erityistä ikonia, niin käytetään
-     * kyseisen tyypin oletusikonia.
      *
      * @param tyyppi Noodin tyyppi
      * @param avain Noodin avainkentän arvo
      * @return Tyyppiin liittyvä ikoni
      */
     virtual QIcon koriste(int tyyppi, const QString &avain = QString());
+
+    /**
+     * @brief Polku, josta löytyy koriste (kuvaketiedosto)
+     * Ensisijaisesti haetaan avaimella, toissijaisesti tyypillä
+     * @param tyyppi Noodin tyyppi
+     * @param avain Avainkenttä
+     * @return polku kuvaketiedostoon
+     */
+    virtual QString koristePolku(int tyyppi, const QString &avain = QString());
+
+    /**
+     * @brief Hakee koristeita polusta
+     *
+     * Koristeet ovat png/jpg-tiedostoja, joiden tiedostonnimenä haluttu avainkenttä-
+     * Ellei avaimelle ole koristetta, käytetään tyypin mukaista koristetta
+     *
+     * @see koriste
+     * @see koristePolku
+     *
+     * @param hakemistopolku
+     */
+    virtual void haeKoristeet(const QString &hakemistopolku);
     
 signals:
     
 public slots:
+
+private:
+    /**
+     * @brief Koristeiden tiedostopolut halutuille avaimille
+     */
+    QMap<QString,QString> avainKoristeet_;
     
 };
 
