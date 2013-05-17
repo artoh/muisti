@@ -45,10 +45,16 @@ QVariant MuistiNodeModel::data(const QModelIndex &index, int role) const
              || role == AvainRooli )
         return noodi->avain();
     // Näytettävä arvo
-
+    else if( (index.column() == ArvoSarake && role == Qt::DisplayRole )
+             || role == NaytettavaArvoRooli )
+        return noodi->naytettavaTieto();
     // Muokattava arvo
-
+    else if( (index.column() == ArvoSarake && role == Qt::EditRole )
+             || role == ArvoRooli )
+        return noodi->naytettavaTieto();
     // Päiväyssarake
+
+    return QVariant();
 }
 
 void MuistiNodeModel::asetaJuuriNoodi(MuistiNoodi *noodi)

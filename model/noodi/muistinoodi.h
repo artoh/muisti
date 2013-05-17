@@ -36,8 +36,7 @@ class MuistiNoodinTieto;
 class MuistiNoodi
 {
 public:
-    MuistiNoodi();
-    explicit MuistiNoodi(int id);
+    explicit MuistiNoodi(int id=0);
 
     ~MuistiNoodi();
 

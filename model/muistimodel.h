@@ -54,7 +54,7 @@ public:
     explicit MuistiModel(QObject *parent = 0);
 
     /**
-     * @brief Ikoni (decoration), joka liittyy kyiseiseen tyyppiin (Qt::DecorationRole)
+     * @brief Ikoni (decoration), joka liittyy kyseiseen tyyppiin (Qt::DecorationRole)
      *
      * Jos halutulle tyyppi/avainparille ei ole erityistä ikonia, niin käytetään
      * kyseisen tyypin oletusikonia.

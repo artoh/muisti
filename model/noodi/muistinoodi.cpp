@@ -22,15 +22,13 @@ GNU General Public License for more details.
 #include "muistinoodintieto.h"
 #include "merkkijonotieto.h"
 
-MuistiNoodi::MuistiNoodi()
+MuistiNoodi::MuistiNoodi(int id)
     : tyyppi_(MuistiModel::NullNoodi), tieto_(0)
 {
-    id_ = ++isoinId_;
-}
-
-MuistiNoodi::MuistiNoodi(int id)
-    : id_(id), tyyppi_(MuistiModel::NullNoodi), tieto_(0)
-{
+    if(id)
+        id_ = id;
+    else
+        id_ = ++isoinId_;
 }
 
 MuistiNoodi::~MuistiNoodi()
