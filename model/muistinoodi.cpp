@@ -19,11 +19,8 @@ GNU General Public License for more details.
 
 #include "muistinoodi.h"
 
-#include "muistinoodintieto.h"
-#include "merkkijonotieto.h"
-
 MuistiNoodi::MuistiNoodi(int id)
-    : tyyppi_(MuistiModel::NullNoodi), tieto_(0)
+    : tyyppi_(MuistiModel::NullNoodi)
 {
     if(id)
         id_ = id;
@@ -33,8 +30,22 @@ MuistiNoodi::MuistiNoodi(int id)
 
 MuistiNoodi::~MuistiNoodi()
 {
-    if( tietoPtr())
-        delete tietoPtr();
+
+}
+
+void MuistiNoodi::lisaaLapsi(MuistiNode *lapsi, int rivi)
+{
+    if( rivi < 0)
+        lapset_.append(lapsi);
+    else
+        lapset_.insert(rivi, lapsi);
+}
+
+MuistiNoodi *MuistiNoodi::otaLapsi(int rivi)
+{
+    MuistiNoodi *lapsi = lapset_.takeAt(rivi);
+    lapsi->vanhempi_ = 0;
+    return lapsi;
 }
 
 MuistiNoodi *MuistiNoodi::lapsi(const QString &avain)
@@ -47,35 +58,20 @@ MuistiNoodi *MuistiNoodi::lapsi(const QString &avain)
     return 0;
 }
 
-QVariant MuistiNoodi::tieto() const
-{
-    if( tietoPtr())
-        return tietoPtr()->tieto();
-    else
-        return QVariant();
-}
-
 QString MuistiNoodi::naytettavaTieto() const
 {
-    if( tietoPtr())
-        return tietoPtr()->naytettavaTieto();
-    else
-        return QString();
+    return tieto().toString();
 }
 
 
 bool MuistiNoodi::asetaTyyppi(int tyyppi)
 {
-    MuistiNoodinTieto *uusiTieto = 0;
-
-
     switch (tyyppi) {
     case MuistiModel::TietoNoodi:
     case MuistiModel::SijaintiNoodi:
     case MuistiModel::PuhelinNoodi:
     case MuistiModel::MemoNoodi:
-        // Tässä vaiheessa kaikki merkkijonomuotoiset samalla
-        uusiTieto = new MerkkijonoTieto();
+
         break;
     case MuistiModel::JuuriNoodi:
     case MuistiModel::MuistoNoodi:
@@ -85,17 +81,7 @@ bool MuistiNoodi::asetaTyyppi(int tyyppi)
         return false;
     }
 
-
-    // Siirretään tieto uuteen
-    // Koska tyyppi vaihtuu, käytetetään merkkijonon kautta
-    if( tietoPtr() && uusiTieto)
-    {
-        uusiTieto->asetaTieto( tietoPtr()->naytettavaTieto());
-        delete tieto_;
-    }
-    tieto_ = uusiTieto;
     tyyppi_ = tyyppi;
-
     return true;
 }
 
@@ -106,18 +92,9 @@ void MuistiNoodi::asetaAvain(const QString &avain)
 
 bool MuistiNoodi::asetaTieto(const QVariant &tieto)
 {
-    if( tietoPtr())
-        return tietoPtr()->asetaTieto(tieto);
-    else
-        return false;
+    tieto_ = tieto;
+    return true;
 }
 
-bool MuistiNoodi::asetaTieto(const QString &tieto)
-{
-    if( tietoPtr())
-        return tietoPtr()->asetaTieto(tieto);
-    else
-        return false;
-}
 
 int MuistiNoodi::isoinId_ = 1000;

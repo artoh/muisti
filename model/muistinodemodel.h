@@ -34,7 +34,36 @@ public:
     explicit MuistiNodeModel(QObject *parent = 0);
     ~MuistiNodeModel();
     
+    QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    QModelIndex parent(const QModelIndex &child) const;
+
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent) const;
+
+    bool insertRows(int row, int count, const QModelIndex &parent);
+    bool removeRows(int row, int count, const QModelIndex &parent);
+
+
+    /**
+     * @brief data Palauttaa modelin tietoa
+     * @param index Indeksi
+     * @param role Rooli: Qt::DisplayRole, Qt::EditRole sarakkeen mukaisesti
+     * @return
+     */
     QVariant data(const QModelIndex &index, int role) const;
+
+    /**
+     * @brief Muuttaa modelin tietoa
+     * @param index Indeksi
+     * @param value Muutettava arvo
+     * @param role Rooli: Qt::EditRole muuttaa sarakkeen mukaan arvoa tai avainta,
+     *  AvainRooli, ArvoRooli tai TyyppiRooli
+     * @return tosi, jos onnistui
+     */
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 signals:
     

@@ -23,14 +23,13 @@ GNU General Public License for more details.
 #include "../muistinodemodel.h"
 
 #include <QList>
-
-class MuistiNoodinTieto;
+#include <QVariant>
 
 /**
  * @brief MuistiNoodin noodi
  *
  * MuistiNoodit tallentavat tiedot puun muotoon. Noodeilla on tyyppinsä,
- * avaimensa sekä arvonsa
+ * avaimensa sekä arvonsa (QVariant)
  *
  */
 class MuistiNoodi
@@ -45,6 +44,20 @@ public:
     QList<MuistiNoodi*> lapset() const { return lapset_; }
 
     /**
+     * @brief Lisää noodin lapseksi
+     * @param lapsi Lisättävä noodi
+     * @param rivi Sijainti lasten joukossa, -1 viimeinen
+     */
+    void lisaaLapsi(MuistiNode* lapsi, int rivi = -1);
+
+    /**
+     * @brief Ottaa lapsen pois puusta
+     * @param rivi Lapsen indeksi
+     * @return Palauttaa lapsinoodin, joka ei enää ole puussa
+     */
+    MuistiNoodi* otaLapsi(int rivi);
+
+    /**
      * @brief Palauttaa ensimmäisen lapsinoodin halutulla avaimella
      * @param avain Etsittävä avain
      * @return Osoitin lapsinoodiin tai 0 ellei löydy
@@ -55,7 +68,7 @@ public:
     int tyyppi() const { return tyyppi_; }
     QString avain() const { return avain_; }
 
-    QVariant tieto() const;
+    QVariant tieto() const { return tieto_; }
     QString naytettavaTieto() const;
 
 
@@ -68,11 +81,9 @@ public:
 
     void asetaAvain(const QString &avain);
     bool asetaTieto(const QVariant &tieto);
-    bool asetaTieto(const QString &tieto);
 
 
 protected:
-    MuistiNoodinTieto *tietoPtr() const { return tieto_; }
 
 private:
     MuistiNoodi* vanhempi_;
@@ -83,7 +94,7 @@ private:
 
     QString avain_;
 
-    MuistiNoodinTieto* tieto_;
+    QVariant tieto_;
 
     static int isoinId_;
 

@@ -19,6 +19,8 @@ GNU General Public License for more details.
 #ifndef MUISTIXMLMODEL_H
 #define MUISTIXMLMODEL_H
 
+#include "../model/muistinodemodel.h"
+
 class MuistiXmlModel : public MuistiNodeModel
 {
     Q_OBJECT
