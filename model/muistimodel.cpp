@@ -27,12 +27,12 @@ MuistiModel::MuistiModel(QObject *parent) :
 {
 }
 
-QIcon MuistiModel::koriste(int tyyppi, const QString &avain )
+QIcon MuistiModel::koriste(int tyyppi, const QString &avain ) const
 {
     return QIcon( koristePolku(tyyppi, avain));
 }
 
-QString MuistiModel::koristePolku(int tyyppi, const QString &avain)
+QString MuistiModel::koristePolku(int tyyppi, const QString &avain) const
 {
     // Ensisijaisesti palautetaan avaimeen liittyvä koriste
     QString polku = avainKoristeet_.value(avain, QString());
@@ -66,7 +66,7 @@ QString MuistiModel::koristePolku(int tyyppi, const QString &avain)
 void MuistiModel::haeKoristeet(const QString &hakemistopolku)
 {
     QDir hakemisto(hakemistopolku);
-    QFileInfo tiedostot = hakemisto.entryInfoList( QStringList() << "*.png" << "*.jpg" );
+    QFileInfoList tiedostot = hakemisto.entryInfoList( QStringList() << "*.png" << "*.jpg" );
     foreach (QFileInfo tiedosto, tiedostot)
     {
         QString avain = tiedosto.baseName();

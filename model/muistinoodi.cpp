@@ -19,13 +19,32 @@ GNU General Public License for more details.
 
 #include "muistinoodi.h"
 
-MuistiNoodi::MuistiNoodi(int id)
-    : tyyppi_(MuistiModel::NullNoodi)
+MuistiNoodi::MuistiNoodi(int id, QDateTime luotu, QDateTime muokattu, int tyyppi, QString avain)
+    : tyyppi_(tyyppi), avain_(avain)
 {
+    // Päivitetään id
     if(id)
+    {
         id_ = id;
+        if( id > isoinId__)
+            isoinId__ = id;
+    }
     else
-        id_ = ++isoinId_;
+        id_ = ++isoinId__;
+
+    // Jos ei ole määritelty luotu ja muokattu -kenttiä (on uusi kenttä),
+    // ne alustetaan nykyiseen aikaan
+
+    if( luotu.isValid() )
+        luotu_ = luotu;
+    else
+        luotu_ = QDateTime::currentDateTime();
+
+    if( muokattu.isValid())
+        muokattu_ = muokattu;
+    else
+        muokattu_ = QDateTime::currentDateTime();
+
 }
 
 MuistiNoodi::~MuistiNoodi()
@@ -33,7 +52,7 @@ MuistiNoodi::~MuistiNoodi()
 
 }
 
-void MuistiNoodi::lisaaLapsi(MuistiNode *lapsi, int rivi)
+void MuistiNoodi::lisaaLapsi(MuistiNoodi *lapsi, int rivi)
 {
     if( rivi < 0)
         lapset_.append(lapsi);
@@ -60,6 +79,35 @@ MuistiNoodi *MuistiNoodi::lapsi(const QString &avain)
 
 QString MuistiNoodi::naytettavaTieto() const
 {
+    // Muiston tietona näytetään otsikkona jotain muuta ;)
+    if( tyyppi() == MuistiModel::MuistoNoodi)
+    {
+        // Haetaan ensimmäinen sopiva
+        foreach( MuistiNoodi* lapsi, lapset())
+        {
+            if( lapsi->tyyppi() == MuistiModel::HenkiloNoodi ||
+                    lapsi->tyyppi() == MuistiModel::TietoNoodi )
+                return lapsi->naytettavaTieto();
+        }
+    }
+    else if( tyyppi() == MuistiModel::HenkiloNoodi )
+    {
+        // Henkilöllä näytetään sukunimi etunimi
+        QString etunimi = tieto().toStringList().value(0);
+        QString sukunimi = tieto().toStringList().value(1);
+
+        if( !etunimi.isEmpty() && !sukunimi.isEmpty() )
+            return sukunimi + " " + etunimi;
+        else if( !sukunimi.isEmpty())
+            return sukunimi;
+        else
+            return etunimi;
+    }
+    else if( tyyppi() == MuistiModel::PvmNoodi)
+    {
+        return tieto().toDate().toString("dd.MM.yyyy");
+    }
+
     return tieto().toString();
 }
 
@@ -82,19 +130,36 @@ bool MuistiNoodi::asetaTyyppi(int tyyppi)
     }
 
     tyyppi_ = tyyppi;
+    paivitaMuokattuAika();
     return true;
 }
 
 void MuistiNoodi::asetaAvain(const QString &avain)
 {
     avain_ = avain;
+    paivitaMuokattuAika();
 }
 
 bool MuistiNoodi::asetaTieto(const QVariant &tieto)
 {
     tieto_ = tieto;
+    paivitaMuokattuAika();
     return true;
 }
 
+void MuistiNoodi::asetaLadattuTieto(const QVariant &tieto)
+{
+    tieto_ = tieto;
+}
 
-int MuistiNoodi::isoinId_ = 1000;
+void MuistiNoodi::paivitaMuokattuAika()
+{
+    muokattu_ = QDateTime::currentDateTime();
+    // Päivitetään Muokattu-aika myös puussa ylöspäin, jotta näkyy
+    // koska kenttää on muokattu
+    if( vanhempi() )
+        vanhempi()->paivitaMuokattuAika();
+}
+
+
+int MuistiNoodi::isoinId__ = 1000;

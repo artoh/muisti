@@ -21,18 +21,35 @@ GNU General Public License for more details.
 
 #include "../model/muistinodemodel.h"
 
+class QXmlStreamReader;
+class QXmlStreamWriter;
+
+/**
+ * @brief XML-tiedostoon tallennus ja lataus MuistiModelissa
+ *
+ */
 class MuistiXmlModel : public MuistiNodeModel
 {
     Q_OBJECT
 public:
     explicit MuistiXmlModel(QObject *parent = 0);
-    
-signals:
-    
-public slots:
+
     bool lataaTiedosto(const QString &tiedostonnimi);
     bool tallennaTiedostoon(const QString &tiedostonnimi);
     
+signals:
+    
+
+    
+protected:
+    MuistiNoodi *lueXml(QXmlStreamReader *reader);
+
+    static MuistiNoodi *lueNoodi(QXmlStreamReader *lukija, const QString &nimi);
+    static QString lueNimi(QXmlStreamReader *lukija);
+
+    void kirjoitaNoodi(QXmlStreamWriter* kirjoittaja, MuistiNoodi* noodi);
+
+
 };
 
 #endif // MUISTIXMLMODEL_H

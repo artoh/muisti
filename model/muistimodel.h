@@ -62,7 +62,7 @@ public:
      * @param avain Noodin avainkentän arvo
      * @return Tyyppiin liittyvä ikoni
      */
-    virtual QIcon koriste(int tyyppi, const QString &avain = QString());
+    virtual QIcon koriste(int tyyppi, const QString &avain = QString()) const;
 
     /**
      * @brief Polku, josta löytyy koriste (kuvaketiedosto)
@@ -71,7 +71,7 @@ public:
      * @param avain Avainkenttä
      * @return polku kuvaketiedostoon
      */
-    virtual QString koristePolku(int tyyppi, const QString &avain = QString());
+    virtual QString koristePolku(int tyyppi, const QString &avain = QString()) const;
 
     /**
      * @brief Hakee koristeita polusta
@@ -84,7 +84,7 @@ public:
      *
      * @param hakemistopolku
      */
-    virtual void haeKoristeet(const QString &hakemistopolku);
+    virtual void haeKoristeet(const QString &hakemistopolku) ;
     
 signals:
     

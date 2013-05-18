@@ -37,7 +37,7 @@ MuistiNodeModel::~MuistiNodeModel()
 QModelIndex MuistiNodeModel::index(int row, int column, const QModelIndex &parent) const
 {
     if( !juuriNoodi() || row < 0 || column < 0 )
-        return QModelIndex;
+        return QModelIndex();
 
     MuistiNoodi *vanhempi = noodiIndeksista(parent);
     if( !vanhempi)
@@ -76,7 +76,7 @@ int MuistiNodeModel::rowCount(const QModelIndex &parent) const
     MuistiNoodi *vanhempi = noodiIndeksista(parent);
     if( !vanhempi )
         return 0;
-    return vanhempi->lapsiLuku();
+    return vanhempi->lapsiluku();
 }
 
 int MuistiNodeModel::columnCount(const QModelIndex &parent) const
@@ -93,7 +93,7 @@ bool MuistiNodeModel::insertRows(int row, int count, const QModelIndex &parent)
         return false;
 
     // Vanhemman noodi
-    MuistiNoodi *item = parent.isValid() ? noodiIndeksista(index) : juuriNoodi();
+    MuistiNoodi *item = parent.isValid() ? noodiIndeksista(parent) : juuriNoodi();
 
     beginInsertRows(parent, row, row + count - 1);
     for( int i = 0; i < count ; i++)
@@ -159,7 +159,7 @@ bool MuistiNodeModel::setData(const QModelIndex &index, const QVariant &value, i
              || role == ArvoRooli )
         noodi->asetaTieto(value);
     else if( role == TyyppiRooli )
-        noodi->asetaTyyppi(value.toString());
+        noodi->asetaTyyppi(value.toInt());
     else
         return false;
 
@@ -211,7 +211,7 @@ void MuistiNodeModel::asetaJuuriNoodi(MuistiNoodi *noodi)
     endResetModel();
 }
 
-MuistiNoodi *MuistiNodeModel::noodiIndeksista(const QModelIndex &index)
+MuistiNoodi *MuistiNodeModel::noodiIndeksista(const QModelIndex &index) const
 {
     if( index.isValid())
         return static_cast<MuistiNoodi*>(index.internalPointer());

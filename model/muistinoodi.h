@@ -20,10 +20,11 @@ GNU General Public License for more details.
 #ifndef MUISTINOODI_H
 #define MUISTINOODI_H
 
-#include "../muistinodemodel.h"
+#include "muistinodemodel.h"
 
 #include <QList>
 #include <QVariant>
+#include <QDateTime>
 
 /**
  * @brief MuistiNoodin noodi
@@ -35,7 +36,20 @@ GNU General Public License for more details.
 class MuistiNoodi
 {
 public:
-    explicit MuistiNoodi(int id=0);
+    /**
+     * @brief MuistiNoodi rakentaja
+     *
+     * Parametrit annetaan vain silloin, kun noodi ladataan, sillä rakentaja säilyttää
+     * muutosajan, toisin kuin asetaAvain(), asetaTieto() ja asetaTyyppi()
+     *
+     * @param id Noodin id
+     * @param luotu Noodin luomisaikaleima
+     * @param muokattu Noodin muokkausaikaleima
+     * @param tyyppi Noodin tyyppi (MuistiModel::MuistiNoodiTyyppi)
+     * @param avain Noodin avainkenttä
+     */
+    MuistiNoodi(int id=0, QDateTime luotu = QDateTime(), QDateTime muokattu = QDateTime(),
+                int tyyppi = MuistiModel::NullNoodi,QString avain = QString() );
 
     ~MuistiNoodi();
 
@@ -48,7 +62,7 @@ public:
      * @param lapsi Lisättävä noodi
      * @param rivi Sijainti lasten joukossa, -1 viimeinen
      */
-    void lisaaLapsi(MuistiNode* lapsi, int rivi = -1);
+    void lisaaLapsi(MuistiNoodi *lapsi, int rivi = -1);
 
     /**
      * @brief Ottaa lapsen pois puusta
@@ -72,6 +86,9 @@ public:
     QString naytettavaTieto() const;
 
 
+    QDateTime luotu() const { return luotu_; }
+    QDateTime muokattu() const { return muokattu_; }
+
     /**
      * @brief Asettaa noodin tyypin ja alustaa tiedon
      * @param tyyyppi
@@ -80,10 +97,27 @@ public:
     bool asetaTyyppi(int tyyppi);
 
     void asetaAvain(const QString &avain);
+
+    /**
+     * @brief Asettaa tiedon muokkauksen perusteella
+     *
+     * Tämä funktio päivittää muokkausaikaleiman
+     * @param tieto
+     * @return
+     */
+
     bool asetaTieto(const QVariant &tieto);
+    /**
+     * @brief Asettaa tiedon latauksen perusteella
+     *
+     * Tämä funktio ei päivitä muokkausaikaleimaa
+     * @param tieto
+     */
+    void asetaLadattuTieto(const QVariant &tieto);
 
 
 protected:
+    void paivitaMuokattuAika();
 
 private:
     MuistiNoodi* vanhempi_;
@@ -92,11 +126,13 @@ private:
     int id_;
     int tyyppi_;
 
-    QString avain_;
+    QDateTime luotu_;
+    QDateTime muokattu_;
 
+    QString avain_;
     QVariant tieto_;
 
-    static int isoinId_;
+    static int isoinId__;
 
 };
 

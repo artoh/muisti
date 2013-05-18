@@ -73,7 +73,7 @@ protected:
     MuistiNoodi* juuriNoodi() const { return juuriNoodi_; }
     void asetaJuuriNoodi(MuistiNoodi* noodi);
 
-    MuistiNoodi* noodiIndeksista(const QModelIndex &index);
+    MuistiNoodi* noodiIndeksista(const QModelIndex &index) const;
 
 private:
     MuistiNoodi *juuriNoodi_;
