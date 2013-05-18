@@ -6,7 +6,8 @@ SOURCES	+= \
     model/muistinodemodel.cpp \
     model/muistinoodi.cpp \
     xml/muistixmlmodel.cpp \
-    html/muistihtml.cpp
+    html/muistihtml.cpp \
+    testi/main.cpp
 
 HEADERS += \ 
     model/muistimodel.h \

@@ -19,6 +19,7 @@ GNU General Public License for more details.
 #include "muistinodemodel.h"
 #include "muistinoodi.h"
 
+#include <QDebug>
 
 MuistiNodeModel::MuistiNodeModel(QObject *parent) :
     MuistiModel(parent)
@@ -36,47 +37,52 @@ MuistiNodeModel::~MuistiNodeModel()
 
 QModelIndex MuistiNodeModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if( !juuriNoodi() || row < 0 || column < 0 )
+    if( !juuriNoodi() || row < 0 || column < 0 ||
+            (parent.isValid() && parent.column() != 0))
         return QModelIndex();
 
     MuistiNoodi *vanhempi = noodiIndeksista(parent);
-    if( !vanhempi)
-        return QModelIndex();   // Juuri-indeksi
 
-    MuistiNoodi *lapsi = vanhempi->lapset().value(row);
+    if( MuistiNoodi *item = vanhempi->lapset().value(row ))
+        return createIndex(row, column, item);
 
-    if( !lapsi )
-        return QModelIndex();
+    return QModelIndex();
 
-    return createIndex(row,column,lapsi);
 }
 
 QModelIndex MuistiNodeModel::parent(const QModelIndex &child) const
 {
-    MuistiNoodi *noodi = noodiIndeksista(child);
-    if( !noodi )
+    if( !child.isValid())
         return QModelIndex();
 
-    MuistiNoodi *vanhempiNoodi = noodi->vanhempi();
-    if( !vanhempiNoodi )
-        return QModelIndex();
+    if( MuistiNoodi* lapsiNoodi = noodiIndeksista(child))
+    {
+        if( MuistiNoodi* vanhempiNoodi = lapsiNoodi->vanhempi() )
+        {
+            if( vanhempiNoodi == juuriNoodi())
+                // Ensimmäisellä tasolla, vanhempi on juuri
+                return QModelIndex();
+            else
+                if( MuistiNoodi *isoVanhempiNoodi = vanhempiNoodi->vanhempi())
+                {
+                    int rivi = isoVanhempiNoodi->lapset().indexOf(vanhempiNoodi);
+                    return createIndex(rivi, 0, vanhempiNoodi);
+                }
+        }
+    }
+    return QModelIndex();
 
-    MuistiNoodi *isoVanhempiNoodi = vanhempiNoodi->vanhempi();
-    if( !isoVanhempiNoodi)
-        return QModelIndex();
-
-    int rivi = isoVanhempiNoodi->lapset().indexOf(vanhempiNoodi);
-    return createIndex( rivi, 0, vanhempiNoodi);
-}
+ }
 
 int MuistiNodeModel::rowCount(const QModelIndex &parent) const
 {
-    if( parent.column() > 0)
+    if( parent.column() != 0 && parent.isValid() )
         return 0;   // Saa kysyä vain ensimmäiseltä sarakkeelta
+
     MuistiNoodi *vanhempi = noodiIndeksista(parent);
-    if( !vanhempi )
-        return 0;
-    return vanhempi->lapsiluku();
+    if( vanhempi )
+        return vanhempi->lapsiluku();
+    return 0;
 }
 
 int MuistiNodeModel::columnCount(const QModelIndex &parent) const
@@ -142,6 +148,9 @@ QVariant MuistiNodeModel::data(const QModelIndex &index, int role) const
              || role == ArvoRooli )
         return noodi->naytettavaTieto();
     // Päiväyssarake
+    // Id
+    else if( role == MuistiModel::IdRooli)
+        return noodi->id();
 
     return QVariant();
 }
@@ -214,7 +223,9 @@ void MuistiNodeModel::asetaJuuriNoodi(MuistiNoodi *noodi)
 MuistiNoodi *MuistiNodeModel::noodiIndeksista(const QModelIndex &index) const
 {
     if( index.isValid())
-        return static_cast<MuistiNoodi*>(index.internalPointer());
-    else
-        return juuriNoodi();
+    {
+        if( MuistiNoodi *noodi = static_cast<MuistiNoodi*>(index.internalPointer()))
+            return noodi;
+    }
+    return juuriNoodi();
 }

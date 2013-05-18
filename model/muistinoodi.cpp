@@ -20,7 +20,7 @@ GNU General Public License for more details.
 #include "muistinoodi.h"
 
 MuistiNoodi::MuistiNoodi(int id, QDateTime luotu, QDateTime muokattu, int tyyppi, QString avain)
-    : tyyppi_(tyyppi), avain_(avain)
+    : vanhempi_(0), tyyppi_(tyyppi), avain_(avain)
 {
     // Päivitetään id
     if(id)
@@ -49,7 +49,7 @@ MuistiNoodi::MuistiNoodi(int id, QDateTime luotu, QDateTime muokattu, int tyyppi
 
 MuistiNoodi::~MuistiNoodi()
 {
-
+    qDeleteAll(lapset_);
 }
 
 void MuistiNoodi::lisaaLapsi(MuistiNoodi *lapsi, int rivi)
@@ -58,6 +58,8 @@ void MuistiNoodi::lisaaLapsi(MuistiNoodi *lapsi, int rivi)
         lapset_.append(lapsi);
     else
         lapset_.insert(rivi, lapsi);
+
+    lapsi->vanhempi_ = this;
 }
 
 MuistiNoodi *MuistiNoodi::otaLapsi(int rivi)

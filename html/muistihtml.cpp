@@ -1,6 +1,7 @@
 #include "muistihtml.h"
 #include "../model/muistimodel.h"
 
+
 MuistiHtml::MuistiHtml(QObject *parent) :
     QObject(parent), model_(0), koristeModel_(0)
 {
@@ -64,6 +65,7 @@ QString MuistiHtml::html()
 void MuistiHtml::kirjoitaMuisto(int rivi)
 {
     QModelIndex indeksi = model_->index(rivi, 0, QModelIndex());
+
     html_.append("<table width=100%><tr><th class=pvm width=33%>");
     html_.append( indeksi.data().toString() );
     html_.append("<br/>");
@@ -103,16 +105,15 @@ void MuistiHtml::kirjoitaMuisto(int rivi)
 
 void MuistiHtml::kirjoitaTieto(const QModelIndex &indeksi, int sisennys)
 {
-    QModelIndex arvoIndeksi = model_->index( indeksi.row(), 1, indeksi.parent() );
-    if( arvoIndeksi.data(Qt::DisplayRole).toString().isEmpty() )
+     if( indeksi.data(MuistiModel::NaytettavaArvoRooli).toString().isEmpty() )
         return;     // Ei tyhjiä kenttiä!
 
     html_.append("<tr><td>");
     for(int i=0; i<sisennys; i++)
         html_.append("&nbsp;&nbsp;&nbsp;");
-    html_.append( indeksi.data(Qt::DisplayRole).toString());
+    html_.append( indeksi.data(MuistiModel::AvainRooli).toString());
     html_.append("</td><td colspan=2>");
-    html_.append(arvoIndeksi.data().toString());
+    html_.append( indeksi.data(MuistiModel::NaytettavaArvoRooli).toString() );
 
     html_.append("</td></tr>");
 

@@ -203,6 +203,7 @@ MuistiNoodi *MuistiXmlModel::lueNoodi(QXmlStreamReader *lukija, const QString &n
                 QDate pvm = QDate::fromString("yyyy-MM-dd");
                 uusiNoodi->asetaLadattuTieto(pvm);
             }
+            lukija->readNext();
 
         }
         else
@@ -250,8 +251,8 @@ QString MuistiXmlModel::lueNimi(QXmlStreamReader *lukija)
         {
             nimi = lukija->text().toString().trimmed();
         }
-        else
-            lukija->readNext();
+
+        lukija->readNext();
 
     }
 
@@ -274,15 +275,20 @@ void MuistiXmlModel::kirjoitaNoodi(QXmlStreamWriter *kirjoittaja, MuistiNoodi *n
         break;
     case MuistiModel::HenkiloNoodi :
         kirjoittaja->writeStartElement("henkilo");
-        kirjoittaja->writeAttribute("rooli", noodi->avain());
+        if( !noodi->avain().isEmpty())
+            kirjoittaja->writeAttribute("rooli", noodi->avain());
         break;
     case MuistiModel::TietoNoodi :
         kirjoittaja->writeStartElement("tieto");
-        kirjoittaja->writeAttribute("avain", noodi->avain());
+
+        if( !noodi->avain().isEmpty())
+            kirjoittaja->writeAttribute("avain", noodi->avain());
         break;
     case MuistiModel::PvmNoodi :
         kirjoittaja->writeStartElement("pvm");
-        kirjoittaja->writeAttribute("avain", noodi->avain());
+
+        if( !noodi->avain().isEmpty())
+            kirjoittaja->writeAttribute("avain", noodi->avain());
         break;
     case MuistiModel::SijaintiNoodi:
         kirjoittaja->writeStartElement("sijainti");
@@ -290,11 +296,13 @@ void MuistiXmlModel::kirjoitaNoodi(QXmlStreamWriter *kirjoittaja, MuistiNoodi *n
         break;
     case MuistiModel::PuhelinNoodi :
         kirjoittaja->writeStartElement("puhelin");
-        kirjoittaja->writeAttribute("avain", noodi->avain());
+        if( !noodi->avain().isEmpty())
+            kirjoittaja->writeAttribute("avain", noodi->avain());
         break;
     case MuistiModel::MemoNoodi :
         kirjoittaja->writeStartElement("memo");
-        kirjoittaja->writeAttribute("avain", noodi->avain());
+        if( !noodi->avain().isEmpty())
+            kirjoittaja->writeAttribute("avain", noodi->avain());
         break;
     default:
         // Ei kirjoiteta tuntemattomia tyyppejä
@@ -311,7 +319,8 @@ void MuistiXmlModel::kirjoitaNoodi(QXmlStreamWriter *kirjoittaja, MuistiNoodi *n
     // Kirjoitetaan tietosisältö
     if( noodi->tyyppi() == MuistiModel::TietoNoodi ||
             noodi->tyyppi() == MuistiModel::SijaintiNoodi ||
-            noodi->tyyppi() == MuistiModel::PuhelinNoodi)
+            noodi->tyyppi() == MuistiModel::PuhelinNoodi ||
+            noodi->tyyppi() == MuistiModel::MemoNoodi )
     {
         if( !noodi->tieto().toString().isEmpty())
             kirjoittaja->writeCharacters(noodi->tieto().toString());

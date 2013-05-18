@@ -58,7 +58,7 @@ QString MuistiModel::koristePolku(int tyyppi, const QString &avain) const
 
     // Ja lopulta ohjelman kuvake
     default:
-        return ":/model/noodiTyyppiPic/muisti.png";
+        return ":/muisti32.png";
     }
 
 }
