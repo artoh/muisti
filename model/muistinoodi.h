@@ -88,6 +88,11 @@ public:
 
     QDateTime luotu() const { return luotu_; }
     QDateTime muokattu() const { return muokattu_; }
+    /**
+     * @brief Palauttaa joko tämän päivämäärän, tai lapsen päivämäärän
+     * @return
+     */
+    QDate pvm() const;
 
     /**
      * @brief Asettaa noodin tyypin ja alustaa tiedon

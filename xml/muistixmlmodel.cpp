@@ -200,7 +200,7 @@ MuistiNoodi *MuistiXmlModel::lueNoodi(QXmlStreamReader *lukija, const QString &n
             }
             else if( tyyppi == MuistiModel::PvmNoodi)
             {
-                QDate pvm = QDate::fromString("yyyy-MM-dd");
+                QDate pvm = QDate::fromString(tekstia,"yyyy-MM-dd");
                 uusiNoodi->asetaLadattuTieto(pvm);
             }
             lukija->readNext();

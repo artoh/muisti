@@ -85,13 +85,7 @@ int MuistiNodeModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-int MuistiNodeModel::columnCount(const QModelIndex &parent) const
-{
-    if( parent.isValid())
-        return 2;
-    else
-        return 3;   // Vain juuren alla on pvm-sarake
-}
+
 
 bool MuistiNodeModel::insertRows(int row, int count, const QModelIndex &parent)
 {
@@ -148,9 +142,20 @@ QVariant MuistiNodeModel::data(const QModelIndex &index, int role) const
              || role == ArvoRooli )
         return noodi->naytettavaTieto();
     // Päiväyssarake
+    else if( (index.column() == PvmSarake && role == Qt::DisplayRole)
+             || role == PvmRooli )
+        return noodi->pvm();
+    // Muokattusarake
+    else if((index.column() == MuokattuSarake && role==Qt::DisplayRole)
+            || role == MuokattuRooli)
+        return noodi->muokattu();
+    // Luotu
+    else if( role == LuotuRooli)
+        return noodi->luotu();
     // Id
     else if( role == MuistiModel::IdRooli)
         return noodi->id();
+
 
     return QVariant();
 }
@@ -177,39 +182,7 @@ bool MuistiNodeModel::setData(const QModelIndex &index, const QVariant &value, i
 
 }
 
-Qt::ItemFlags MuistiNodeModel::flags(const QModelIndex &index) const
-{
-    Qt::ItemFlags flags= QAbstractItemModel::flags(index);
 
-    MuistiNoodi* noodi = noodiIndeksista(index);
-
-    // Avainsaraketta voi muokata muistossa sekä tietokentillä
-    // Arvosaraketta voi muokata tietokentillä
-    if( (noodi->tyyppi() > JuuriNoodi  && index.column() == AvainSarake ) ||
-            (noodi->tyyppi() > MuistoNoodi && index.column() == ArvoSarake))
-        flags |= Qt::ItemIsEditable;
-
-    return flags;
-
-}
-
-QVariant MuistiNodeModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    if( orientation == Qt::Horizontal && role == Qt::DisplayRole)
-    {
-        switch (section) {
-        case AvainSarake:
-            return QVariant("Laji");
-        case ArvoSarake :
-            return QVariant("Otsikko");
-        case PvmSarake:
-            return QVariant("Pvm");
-        default:
-            break;
-        }
-    }
-    return QVariant();
-}
 
 void MuistiNodeModel::asetaJuuriNoodi(MuistiNoodi *noodi)
 {
@@ -228,4 +201,20 @@ MuistiNoodi *MuistiNodeModel::noodiIndeksista(const QModelIndex &index) const
             return noodi;
     }
     return juuriNoodi();
+}
+
+Qt::ItemFlags MuistiNodeModel::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags flags= QAbstractItemModel::flags(index);
+
+    MuistiNoodi* noodi = noodiIndeksista(index);
+
+    // Avainsaraketta voi muokata muistossa sekä tietokentillä
+    // Arvosaraketta voi muokata tietokentillä
+    if( (noodi->tyyppi() > JuuriNoodi  && index.column() == AvainSarake ) ||
+            (noodi->tyyppi() > MuistoNoodi && index.column() == ArvoSarake))
+        flags |= Qt::ItemIsEditable;
+
+    return flags;
+
 }

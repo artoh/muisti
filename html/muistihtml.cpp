@@ -1,9 +1,10 @@
 #include "muistihtml.h"
 #include "../model/muistimodel.h"
 
+#include <QDate>
 
 MuistiHtml::MuistiHtml(QObject *parent) :
-    QObject(parent), model_(0), koristeModel_(0)
+    QObject(parent), tyylisivu_("qrc:/html/muistihtml.css"), model_(0), koristeModel_(0)
 {
 }
 
@@ -70,7 +71,7 @@ void MuistiHtml::kirjoitaMuisto(int rivi)
     html_.append( indeksi.data().toString() );
     html_.append("<br/>");
 
-    html_.append( model_->data( model_->index(rivi, MuistiModel::PvmSarake , QModelIndex()) , Qt::DisplayRole ).toString());
+    html_.append( indeksi.data(MuistiModel::PvmRooli).toDate().toString("dd.MM.yyyy") );
 
     html_.append( "</th><th>");
     html_.append( indeksi.data(MuistiModel::ArvoRooli).toString());
@@ -86,12 +87,14 @@ void MuistiHtml::kirjoitaMuisto(int rivi)
         kuvakepolku = koristeModel_->koristePolku(MuistiModel::MuistoNoodi,
                                                     indeksi.data(MuistiModel::AvainRooli).toString());
     else
-        kuvakepolku = ":/muisti32.png";
+        kuvakepolku = ":/html/muisti.png";
 
     if( kuvakepolku.startsWith(":/"))
         kuvakepolku = "qrc" + kuvakepolku;
+    else
+        kuvakepolku = "file:" + kuvakepolku;
 
-    html_.append("\"><img width=32 height=32 src=\"" + kuvakepolku + "\"></a></td></tr>");
+    html_.append("\"><img width=64 height=64 src=\"" + kuvakepolku + "\"></a></td></tr>");
 
     for( int rivi = 0; rivi < model_->rowCount(indeksi); rivi++)
     {

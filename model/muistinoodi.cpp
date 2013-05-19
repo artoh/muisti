@@ -114,6 +114,20 @@ QString MuistiNoodi::naytettavaTieto() const
 }
 
 
+QDate MuistiNoodi::pvm() const
+{
+    if( tyyppi() == MuistiModel::PvmNoodi)
+        return tieto().toDate();
+
+    foreach (MuistiNoodi *noodi, lapset() )
+    {
+        if( noodi->tyyppi() == MuistiModel::PvmNoodi)
+            return noodi->tieto().toDate();
+    }
+    return QDate();     // Invaliidi
+}
+
+
 bool MuistiNoodi::asetaTyyppi(int tyyppi)
 {
     switch (tyyppi) {

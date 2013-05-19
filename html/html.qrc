@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/html">
+        <file>muistihtml.css</file>
+        <file>muisti.png</file>
+    </qresource>
+</RCC>

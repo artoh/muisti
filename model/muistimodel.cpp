@@ -58,7 +58,7 @@ QString MuistiModel::koristePolku(int tyyppi, const QString &avain) const
 
     // Ja lopulta ohjelman kuvake
     default:
-        return ":/muisti32.png";
+        return ":/model/noodiTyyppiPic/muisti.png";
     }
 
 }
@@ -75,4 +75,33 @@ void MuistiModel::haeKoristeet(const QString &hakemistopolku)
         avainKoristeet_.insert(avain, polku);
     }
 
+}
+
+
+QVariant MuistiModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if( orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        switch (section) {
+        case AvainSarake:
+            return QVariant("Laji");
+        case ArvoSarake :
+            return QVariant("Otsikko");
+        case PvmSarake:
+            return QVariant("Pvm");
+        case MuokattuSarake :
+            return QVariant("Muokattu");
+        default:
+            break;
+        }
+    }
+    return QVariant();
+}
+
+int MuistiModel::columnCount(const QModelIndex &parent) const
+{
+    if( parent.isValid())
+        return 2;
+    else
+        return 4;   // Vain juuren alla on pvm-sarake
 }

@@ -38,10 +38,13 @@ public:
            IdRooli = Qt::UserRole + 1,
            AvainRooli = Qt::UserRole + 2,
            ArvoRooli = Qt::UserRole + 3,
-           NaytettavaArvoRooli = Qt::UserRole + 4
+           NaytettavaArvoRooli = Qt::UserRole + 4,
+           LuotuRooli = Qt::UserRole + 5,
+           MuokattuRooli = Qt::UserRole + 6,
+           PvmRooli = Qt::UserRole + 7
          };
 
-    enum { AvainSarake = 0, ArvoSarake = 1, PvmSarake = 2 } ;
+    enum { AvainSarake = 0, ArvoSarake = 1, PvmSarake = 2, MuokattuSarake=3 } ;
 
     enum MuistiNoodiTyyppi { NullNoodi = 0, JuuriNoodi = 1,
                             MuistoNoodi = 2,
@@ -85,7 +88,11 @@ public:
      * @param hakemistopolku
      */
     virtual void haeKoristeet(const QString &hakemistopolku) ;
+
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     
+    int columnCount(const QModelIndex &parent) const;
+
 signals:
     
 public slots:
