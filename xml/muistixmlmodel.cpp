@@ -113,7 +113,7 @@ MuistiNoodi *MuistiXmlModel::lueNoodi(QXmlStreamReader *lukija, const QString &n
 {
     // Tässä vaiheessa ollaan noodin elementissä
     // Määritellään tyyppi
-    int tyyppi;
+    int tyyppi = NullNoodi;
 
     if( nimi == "muisti")
         tyyppi = JuuriNoodi;

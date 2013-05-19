@@ -42,9 +42,7 @@ MuistiHakuIkkuna::MuistiHakuIkkuna(QWidget *parent) :
     luoIkkuna();
     luoValikko();
 
-    // Aluksi näytetään kaikki
-    hakuProxy_->hae(QString());
-    lajitteluProxy_->sort(2, Qt::DescendingOrder);
+    // Aloitetaan tyhjällä pohjalla
     view_->setHtml( html_->html() );
 
 }
@@ -99,6 +97,7 @@ void MuistiHakuIkkuna::luoModelit()
     html_ = new MuistiHtml(this);
     html_->asetaModel(lajitteluProxy_);
     html_->asetaMuistiKoristeModel(model_);
+    html_->asetaTyylisivu("qrc:/mobiili/muistihtml.css");
 
     if( settings.value("muistitiedosto").isValid())
         model_->lataaTiedosto( settings.value("muistitiedosto").toString() );

@@ -22,8 +22,26 @@ HEADERS += \
 
 RESOURCES += \ 
     model/modelPic.qrc \
-    html/html.qrc
+    html/html.qrc \
+    mobiili/mobiili.qrc
 
 FORMS +=
 
 OTHER_FILES +=
+
+maemo5 {
+    target.path = /opt/muistihaku/bin
+    INSTALLS += target
+}
+
+maemo5 {
+    desktopfile.files = muistihaku.desktop
+    desktopfile.path = /usr/share/applications/hildon
+    INSTALLS += desktopfile
+}
+
+maemo5 {
+    icon.files = muistihaku.png
+    icon.path = /usr/share/icons/hicolor/64x64/apps
+    INSTALLS += icon
+}
