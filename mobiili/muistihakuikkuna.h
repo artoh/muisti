@@ -32,6 +32,14 @@ class QSortFilterProxyModel;
 
 #include <QMainWindow>
 
+/**
+ * @brief MuistiHaku mobiilisovelluksen pääikkuna
+ *
+ * Ikkunassa on LineEdit, johon syötetään haettava teksti, ja löydetyt
+ * tapaukset napsahtava alla olevaan selaajaan
+ *
+ */
+
 class MuistiHakuIkkuna : public QMainWindow
 {
     Q_OBJECT

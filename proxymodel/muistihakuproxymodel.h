@@ -26,6 +26,11 @@ public:
     int rowCount(const QModelIndex &parent) const;
     int columnCount(const QModelIndex &parent) const;
 
+    /**
+     * @brief Suodattaa modelia haun mukaan
+     * @param haettava Etsittävä teksti, QString() näyttää kaikki, tyhjä merkkijono ei mitään.
+     * @param tyyppi Etsittävä tyyppi
+     */
     void hae(const QString& haettava, int tyyppi = 0);
 
 signals:

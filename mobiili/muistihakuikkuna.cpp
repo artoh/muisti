@@ -42,6 +42,9 @@ MuistiHakuIkkuna::MuistiHakuIkkuna(QWidget *parent) :
     luoIkkuna();
     luoValikko();
 
+    // Aluksi näytetään kaikki
+    hakuProxy_->hae(QString());
+    lajitteluProxy_->sort(2, Qt::DescendingOrder);
     view_->setHtml( html_->html() );
 
 }
@@ -70,7 +73,11 @@ void MuistiHakuIkkuna::hae()
     // Lajitellaan käänteiseen päivämääräjärjestykseen
     lajitteluProxy_->sort(2, Qt::DescendingOrder);
     // Kirjoitetaan html
-    html_->asetaKorostettava( hakuLine_->text());
+
+    if( hakuLine_->text().length() > 2)
+        html_->asetaKorostettava( hakuLine_->text());
+    else
+        html_->asetaKorostettava();
 
     view_->setHtml( html_->html() );
 }

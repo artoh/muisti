@@ -99,6 +99,12 @@ void MuistiHakuProxyModel::hae(const QString &haettava, int tyyppi)
             // näkyvissä
         }
     }
+    else if( haettava.isNull())
+    {
+        // Jos haettavana Null, näytetään kaikki
+        for( int i = 0; i < sourceModel()->rowCount(); i++)
+            haettu_.append(i);
+    }
     endResetModel();
 
 }
