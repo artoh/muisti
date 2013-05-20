@@ -127,10 +127,10 @@ void MuistiHtml::kirjoitaTieto(const QModelIndex &indeksi, int sisennys)
     // Datasarakkeen otsikko
     html_ += "<td colspan=2 id=\"data" + id + "\"";
 
+    // Sijainnin javascript-linkki
     if( tyyppi == MuistiModel::SijaintiNoodi)
         html_ += " onclick=\"kartta(\'data"+ id +"\',\'" + indeksi.data(MuistiModel::NaytettavaArvoRooli).toString()
                 +"\')\"";
-
 
     html_ += " >";
 
@@ -141,10 +141,7 @@ void MuistiHtml::kirjoitaTieto(const QModelIndex &indeksi, int sisennys)
     }
     html_ += tietoteksti;
 
-    // Sijainnin linkki
-    if( tyyppi == MuistiModel::SijaintiNoodi && 0)
-        html_ += " <button type=\"button\" onclick=\"kartta(\'data"+ id +"\',\'" + indeksi.data(MuistiModel::NaytettavaArvoRooli).toString()
-                +"\')\">Kartta</button>";
+
 
 
 

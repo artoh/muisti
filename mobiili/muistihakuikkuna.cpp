@@ -107,6 +107,7 @@ void MuistiHakuIkkuna::luoIkkuna()
 {
     hakuLine_ = new QLineEdit;
     hakuLine_->setPlaceholderText("Hae...");
+    hakuLine_->setInputMethodHints( Qt::ImhNoPredictiveText);
 
     connect( hakuLine_, SIGNAL(returnPressed()),
              this, SLOT(hae()));
