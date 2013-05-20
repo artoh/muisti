@@ -63,6 +63,7 @@ private:
     QAbstractItemModel *model_;
     MuistiModel *koristeModel_;
     QString korostettava_;
+    QString korostettu_;
 
     QString html_;
 

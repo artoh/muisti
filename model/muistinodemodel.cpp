@@ -155,6 +155,9 @@ QVariant MuistiNodeModel::data(const QModelIndex &index, int role) const
     // Id
     else if( role == MuistiModel::IdRooli)
         return noodi->id();
+    // Tyyppi
+    else if( role == MuistiModel::TyyppiRooli)
+        return noodi->tyyppi();
 
 
     return QVariant();

@@ -27,7 +27,8 @@ RESOURCES += \
 
 FORMS +=
 
-OTHER_FILES +=
+OTHER_FILES += \
+    html/muistihtml.js
 
 maemo5 {
     target.path = /opt/muistihaku/bin

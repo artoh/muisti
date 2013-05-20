@@ -38,6 +38,9 @@ QString MuistiHtml::html()
     if( !model_)
         return tr("Mallia ei asetettu");
 
+    // Asetetaan korostetun tyylin replace.
+    korostettu_ = "<span style=\"background-color: yellow\">" + korostettava_ + "</span>";
+
     html_.clear();
 
     html_ = "<html><head>";
@@ -48,16 +51,12 @@ QString MuistiHtml::html()
     }
     html_ += "</head><body>";
 
+    html_ += "<script src=\"qrc:/html/muistihtml.js\"></script>";
+
     for( int i = 0; i < model_->rowCount(QModelIndex()); i++)
         kirjoitaMuisto(i);
 
     html_ += "</body></html>";
-
-    if( !korostettava_.isEmpty())
-    {
-        QString korostettu = "<span style=\"background-color: yellow\">" + korostettava_ + "</span>";
-        html_.replace(korostettava_, korostettu);
-    }
 
     return html_;
 
@@ -108,18 +107,48 @@ void MuistiHtml::kirjoitaMuisto(int rivi)
 
 void MuistiHtml::kirjoitaTieto(const QModelIndex &indeksi, int sisennys)
 {
-     if( indeksi.data(MuistiModel::NaytettavaArvoRooli).toString().isEmpty() )
-        return;     // Ei tyhjiä kenttiä!
+    if( indeksi.data(MuistiModel::NaytettavaArvoRooli).toString().isEmpty() )
+       return;     // Ei tyhjiä kenttiä!
 
-    html_.append("<tr><td>");
+
+    int tyyppi = indeksi.data(MuistiModel::TyyppiRooli).toInt();
+    QString id = indeksi.data(MuistiModel::IdRooli).toString();
+    QString avain = indeksi.data(MuistiModel::AvainRooli).toString();
+    QString tietoteksti = indeksi.data(MuistiModel::NaytettavaArvoRooli).toString();
+
+    html_ += "<tr><td>";
+
     for(int i=0; i<sisennys; i++)
-        html_.append("&nbsp;&nbsp;&nbsp;");
-    html_.append( indeksi.data(MuistiModel::AvainRooli).toString());
-    html_.append("</td><td colspan=2 id=\"data" + indeksi.data(MuistiModel::IdRooli).toString() +
-                 "\ onclick=\"dataclick(" + indeksi.data(MuistiModel::IdRooli).toString() + ")\"  >");
-    html_.append( indeksi.data(MuistiModel::NaytettavaArvoRooli).toString() );
+        html_ += "&nbsp;&nbsp;&nbsp;";
 
-    html_.append("</td></tr>");
+    html_ += avain + "</td>";
+
+
+    // Datasarakkeen otsikko
+    html_ += "<td colspan=2 id=\"data" + id + "\"";
+
+    if( tyyppi == MuistiModel::SijaintiNoodi)
+        html_ += " onclick=\"kartta(\'data"+ id +"\',\'" + indeksi.data(MuistiModel::NaytettavaArvoRooli).toString()
+                +"\')\"";
+
+
+    html_ += " >";
+
+    // Datasarakkeen tieto
+    if( !korostettava_.isEmpty())
+    {
+         tietoteksti.replace( korostettava_, korostettu_);
+    }
+    html_ += tietoteksti;
+
+    // Sijainnin linkki
+    if( tyyppi == MuistiModel::SijaintiNoodi && 0)
+        html_ += " <button type=\"button\" onclick=\"kartta(\'data"+ id +"\',\'" + indeksi.data(MuistiModel::NaytettavaArvoRooli).toString()
+                +"\')\">Kartta</button>";
+
+
+
+    html_ += "</td></tr>";
 
     for( int rivi = 0; rivi < model_->rowCount(indeksi); rivi++)
     {

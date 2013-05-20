@@ -3,5 +3,6 @@
         <file>muistihtml.css</file>
         <file>muisti.png</file>
         <file>muistitausta.png</file>
+        <file>muistihtml.js</file>
     </qresource>
 </RCC>
