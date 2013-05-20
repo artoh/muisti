@@ -4,7 +4,7 @@
 #include <QDate>
 
 MuistiHtml::MuistiHtml(QObject *parent) :
-    QObject(parent), tyylisivu_("qrc:/html/muistihtml.css"), model_(0), koristeModel_(0)
+    QObject(parent), tyylisivu_("qrc:/html/muistihtml.css"), model_(0), koristeModel_(0), valinnat_(0)
 {
 }
 
@@ -62,20 +62,25 @@ QString MuistiHtml::html()
 
 }
 
+void MuistiHtml::valitse(int valinta)
+{
+    valinnat_ |= valinta;
+}
+
 void MuistiHtml::kirjoitaMuisto(int rivi)
 {
     QModelIndex indeksi = model_->index(rivi, 0, QModelIndex());
 
-    html_.append("<table width=100%><tr><th class=pvm width=33%>");
-    html_.append( indeksi.data().toString() );
+    html_.append("<table width=100%><tr><th class=pvm>");
+    html_.append( indeksi.data(MuistiModel::AvainRooli).toString() );
     html_.append("<br/>");
-
     html_.append( indeksi.data(MuistiModel::PvmRooli).toDate().toString("dd.MM.yyyy") );
 
-    html_.append( "</th><th>");
-    html_.append( indeksi.data(MuistiModel::ArvoRooli).toString());
-    html_.append("</th><th width=34><a href=\"muisti:/");
-    html_.append( model_->data( model_->index(rivi, 1, QModelIndex()),MuistiModel::IdRooli ).toString()  );
+    html_ += "</th><th>";
+
+    html_.append( indeksi.data(MuistiModel::NaytettavaArvoRooli).toString());
+    html_.append("<a href=\"muisti:/");
+    html_.append( indeksi.data(MuistiModel::IdRooli).toString());
 
 
     // Piirrettävä kuvake pyritään hakemaan MuistiModelin kuvakkeenhaku-
@@ -93,7 +98,7 @@ void MuistiHtml::kirjoitaMuisto(int rivi)
     else
         kuvakepolku = "file:" + kuvakepolku;
 
-    html_.append("\"><img width=64 height=64 src=\"" + kuvakepolku + "\"></a></td></tr>");
+    html_.append("\"><img class=\"muistokuva\" src=\"" + kuvakepolku + "\"></a></tr>");
 
     for( int rivi = 0; rivi < model_->rowCount(indeksi); rivi++)
     {
@@ -121,11 +126,22 @@ void MuistiHtml::kirjoitaTieto(const QModelIndex &indeksi, int sisennys)
     for(int i=0; i<sisennys; i++)
         html_ += "&nbsp;&nbsp;&nbsp;";
 
+    // Mahdollinen tyypin kuvake
+    if( valinnat() & HtmlTyyppiKuvakkeet && koristeModel_ )
+    {
+        QString koristepolku  = koristeModel_->koristePolku(tyyppi, avain);
+        if( koristepolku.startsWith(":/"))
+            koristepolku = "qrc" + koristepolku;
+        else
+            koristepolku = "file:" + koristepolku;
+        html_ += "<img class=\"koriste\" src=\"" + koristepolku + "\"/>";
+    }
+
     html_ += avain + "</td>";
 
 
     // Datasarakkeen otsikko
-    html_ += "<td colspan=2 id=\"data" + id + "\"";
+    html_ += "<td id=\"data" + id + "\"";
 
     // Sijainnin javascript-linkki
     if( tyyppi == MuistiModel::SijaintiNoodi)

@@ -98,6 +98,7 @@ void MuistiHakuIkkuna::luoModelit()
     html_->asetaModel(lajitteluProxy_);
     html_->asetaMuistiKoristeModel(model_);
     html_->asetaTyylisivu("qrc:/mobiili/muistihtml.css");
+    html_->valitse(MuistiHtml::HtmlTyyppiKuvakkeet | MuistiHtml::JSKarttaLinkki);
 
     if( settings.value("muistitiedosto").isValid())
         model_->lataaTiedosto( settings.value("muistitiedosto").toString() );

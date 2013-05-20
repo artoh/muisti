@@ -28,7 +28,9 @@ RESOURCES += \
 FORMS +=
 
 OTHER_FILES += \
-    html/muistihtml.js
+    html/muistihtml.js \
+    html/muistihtml.css \
+    mobiili/muistihtml.css
 
 maemo5 {
     target.path = /opt/muistihaku/bin

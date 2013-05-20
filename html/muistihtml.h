@@ -32,6 +32,12 @@ class MuistiHtml : public QObject
 {
     Q_OBJECT
 public:
+
+    enum HtmlValinnat {
+        HtmlTyyppiKuvakkeet = 1 /** Näyttää avaimen edessä tyypin kuvakkeen */,
+        JSKarttaLinkki = 2 /** Lisää sijaintikenttiin karttalinkit */
+    };
+
     explicit MuistiHtml(QObject *parent = 0);
     
     void asetaTyylisivu(const QString& tyylisivu );
@@ -54,6 +60,13 @@ public:
      */
     QString html();
 
+    /**
+     * @brief Ottaa käyttöön valinnan (option)
+     * @param valinta HtmlValinnat -vaihtoehto, joka valitaan
+     */
+    void valitse(int valinta);
+    int valinnat() const { return valinnat_; }
+
 signals:
     
 public slots:
@@ -66,6 +79,7 @@ private:
     QString korostettu_;
 
     QString html_;
+    int valinnat_;
 
     void kirjoitaMuisto(int rivi);
     void kirjoitaTieto(const QModelIndex &indeksi, int sisennys=0);
