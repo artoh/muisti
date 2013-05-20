@@ -115,7 +115,8 @@ void MuistiHtml::kirjoitaTieto(const QModelIndex &indeksi, int sisennys)
     for(int i=0; i<sisennys; i++)
         html_.append("&nbsp;&nbsp;&nbsp;");
     html_.append( indeksi.data(MuistiModel::AvainRooli).toString());
-    html_.append("</td><td colspan=2>");
+    html_.append("</td><td colspan=2 id=\"data" + indeksi.data(MuistiModel::IdRooli).toString() +
+                 "\ onclick=\"dataclick(" + indeksi.data(MuistiModel::IdRooli).toString() + ")\"  >");
     html_.append( indeksi.data(MuistiModel::NaytettavaArvoRooli).toString() );
 
     html_.append("</td></tr>");
